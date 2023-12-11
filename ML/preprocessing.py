@@ -92,17 +92,18 @@ def split_and_scale(df, year_to_predict):
 def feature_selection(df, type='corr'):
     if type == 'corr':
         featuresCorr = df.corr()
-        plt.figure(figsize=(12,10))
+        plt.figure(figsize=(60,50))
         sns.heatmap(featuresCorr, annot=True, cmap=plt.cm.Blues, vmax=1, vmin=-1)
-        # plt.show()
 
-        targetCorr = abs(featuresCorr['EggPrice'])
+        targetCorr = featuresCorr['EggPrice']
         targetCorr = targetCorr.drop('EggPrice')
-        selectedFeatures = targetCorr[targetCorr>0.4]
+
+        targetCorr_abs = abs(targetCorr)
+        selectedFeatures = targetCorr_abs[targetCorr_abs > 0.4]
         print(f"Number of selected features: {len(selectedFeatures)} \n\nHighly relative feature list:\n{selectedFeatures}")
 
         df = df[list(selectedFeatures.keys()) + ['EggPrice']]
 
-        return df
+        return df, selectedFeatures, targetCorr
 
     return df
